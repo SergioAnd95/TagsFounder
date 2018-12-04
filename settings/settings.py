@@ -19,6 +19,7 @@ class BaseConfig:
     DEBUG = env.bool('DEBUG', default=True)
     SQLALCHEMY_DATABASE_URI = env.str('DATABASE_URL', default=os.path.join(BASE_DIR, 'db.sqlite'))
     ELASTICSEARCH_URL = env.list('ELASTICSEARCH_URL', default=[])
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class ProdConfig(BaseConfig):
@@ -28,4 +29,3 @@ class ProdConfig(BaseConfig):
 class TestConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = env.str('TEST_DATABASE_URL', default=os.path.join(BASE_DIR, 'db.sqlite'))
     ELASTICSEARCH_URL = env.list('TEST_ELASTICSEARCH_URL', default=[])
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
