@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restplus import Api
 from flask_cors import CORS
 
-from core.utils import autodiscover_app_modules
+from core.utils import discover_urls
 from core.elasticsearch import Elasticsearch
 
 
@@ -24,7 +24,7 @@ def create_app(object_config='settings.settings.ProdConfig'):
     es.init_app(app)
     cors.init_app(app)
 
-    autodiscover_app_modules('views')
+    discover_urls(api)
 
     return app
 

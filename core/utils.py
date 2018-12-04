@@ -1,10 +1,18 @@
-import importlib
-
 from settings import settings
 
 
-def autodiscover_app_modules(module_name):
+def discover_urls(api):
+    """
+    Find and register all apps routes
+    from apps
+    :return: list
+    """
+
     for app in settings.INSTALLED_APPS:
-        importlib.import_module(f'{app}.{module_name}', '.')
-
-
+        try:
+            _temp = __import__(f'{app}.urls', globals(), locals(), ['urlpatterns'], 0)
+        except ModuleNotFoundError:
+            pass
+        else:
+            for url in _temp.urlpatterns:
+                api.add_resource(*url)

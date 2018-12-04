@@ -26,13 +26,6 @@ def test_create_tag(app):
 def test_find_tags(app):
     url = '/tags_find'
     client = app.test_client()
-    fixtures = [
-        Tag(name='Toyota'),
-        Tag(name='Toyota Corolla 2007'),
-        Tag(name='Toyota Corolla LE'),
-        Tag(name='4 Wheel Drive'),
-        Tag(name='Air Conditioner')
-    ]
 
     # Send request without data
     resp = client.post('/tags_find', json={})
@@ -55,8 +48,6 @@ the car first,Please See What You Want To Buy Before Any Payment .
     db.session.commit()
     resp = client.post(url, json={'text': test_text})
     data = ujson.loads(resp.data)
-    print(es.connection.search(index='tag', doc_type='tag', body={'query': {'match_all': {}}}))
-    # print(Tag.query.all())
-    print(data)
+
     assert resp.status_code == 200
     assert len(data) == 5
