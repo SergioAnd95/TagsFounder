@@ -43,9 +43,7 @@ Also Available in Different Colours.
 Beware Of Fraudsters, therefore do not send money or picture to any dealer or individual you have not gone to inspect
 the car first,Please See What You Want To Buy Before Any Payment .
     """
-    t = Tag(name='Toyota Corolla')
-    db.session.add(t)
-    db.session.commit()
+
     resp = client.post(url, json={'text': test_text})
     data = ujson.loads(resp.data)
 
