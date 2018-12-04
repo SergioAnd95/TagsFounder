@@ -1,4 +1,4 @@
-## Sturdy-Tribble
+## TagsFounder
 #### Task:
 Create service(REST API), that get text and return list of founded tags
 
