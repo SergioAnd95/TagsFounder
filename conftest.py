@@ -1,7 +1,6 @@
 import pytest
 
-from app import create_app, db, es, elasticsearch_setup
-
+from app import create_app, db, es
 from tags.models import Tag
 
 
@@ -21,7 +20,6 @@ def app():
     app = create_app(object_config='settings.settings.TestConfig')
     with app.app_context():
         db.create_all()
-        elasticsearch_setup()
         for tag in get_fixture_data():
             db.session.add(tag)
             db.session.commit()

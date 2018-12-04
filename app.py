@@ -42,12 +42,13 @@ def create_app(object_config='settings.settings.ProdConfig'):
     es.init_app(app)
     cors.init_app(app)
 
+    with app.app_context():
+        elasticsearch_setup()
+
     discover_urls(api)
     return app
 
 
 if __name__ == '__main__':
     app = create_app()
-    elasticsearch_setup(es)
-
     app.run()
