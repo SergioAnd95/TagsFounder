@@ -1,6 +1,6 @@
 import pytest
 
-from app import create_app, db, es
+from app import create_app, db, es, elasticsearch_setup
 
 from tags.models import Tag
 
@@ -16,30 +16,12 @@ def get_fixture_data():
     return fixtures
 
 
-def elasticsearch_settings():
-    tag_settings = {
-        "mappings": {
-            "tag": {
-                "properties": {
-                    "name": {
-                        "type": "text"
-                    },
-                    "query": {
-                        "type": "percolator"
-                    }
-                }
-            }
-        }
-    }
-    es.connection.indices.create(index='tag', ignore=400, body=tag_settings)
-
-
 @pytest.fixture(scope="session")
 def app():
     app = create_app(object_config='settings.settings.TestConfig')
     with app.app_context():
         db.create_all()
-        elasticsearch_settings()
+        elasticsearch_setup()
         for tag in get_fixture_data():
             db.session.add(tag)
             db.session.commit()

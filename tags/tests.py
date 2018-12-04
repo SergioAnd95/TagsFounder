@@ -1,6 +1,6 @@
 import ujson
 
-from app import es, db
+from app import db
 from tags.models import Tag
 
 # from tags.views import *
