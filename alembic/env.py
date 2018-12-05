@@ -1,9 +1,7 @@
 from __future__ import with_statement
 
-import os
-
 from alembic import context
-from sqlalchemy import create_engine, pool
+from sqlalchemy import create_engine
 from logging.config import fileConfig
 
 from settings import settings
@@ -59,7 +57,7 @@ def run_migrations_online():
 
     """
 
-    connectable = create_engine(settings.DATABASE_URL)
+    connectable = create_engine(settings.ProdConfig.SQLALCHEMY_DATABASE_URI)
 
     with connectable.connect() as connection:
         context.configure(
