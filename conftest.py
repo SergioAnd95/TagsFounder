@@ -1,7 +1,8 @@
 import pytest
 
-from app import create_app, db, es
-from tags.models import Tag
+from core.elasticsearch import Elasticsearch
+from app import create_app, elasticsearch_setup
+from tags.models import *
 
 
 def get_fixture_data():
@@ -10,21 +11,55 @@ def get_fixture_data():
         Tag(name='Toyota Corolla 2007'),
         Tag(name='Toyota Corolla LE'),
         Tag(name='4 Wheel Drive'),
-        Tag(name='Air Conditioner')
+        Tag(name='Air Conditioning')
     ]
     return fixtures
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def app():
     app = create_app(object_config='settings.settings.TestConfig')
-    with app.app_context():
-        db.create_all()
-        for tag in get_fixture_data():
-            db.session.add(tag)
-            db.session.commit()
-        yield app
-        es.connection.indices.delete(index='*')
+    ctx = app.app_context()
+    ctx.push()
 
-        db.session.remove()
-        db.drop_all()
+    yield app
+
+    ctx.pop()
+
+
+@pytest.fixture(scope='session')
+def _db(app):
+
+    db.app = app
+    db.create_all()
+
+    for tag in get_fixture_data():
+        db.session.add(tag)
+        db.session.commit()
+
+    yield db
+    db.drop_all()
+
+
+@pytest.yield_fixture(scope='function')
+def _es(app):
+    es.app = app
+    yield es
+
+
+@pytest.fixture(scope='function', autouse=True)
+def session(_db, _es):
+    connection = _db.engine.connect()
+    transaction = connection.begin()
+
+    options = dict(bind=connection, binds={})
+    session_ = _db.create_scoped_session(options=options)
+
+    db.session = session_
+    elasticsearch_setup()
+
+    yield session_
+
+    transaction.rollback()
+    connection.close()
+    session_.remove()

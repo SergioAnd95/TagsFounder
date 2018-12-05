@@ -2,7 +2,7 @@ from app import api, db
 
 from werkzeug.exceptions import BadRequest
 
-from flask_restplus import Resource, fields
+from flask_restplus import Resource
 from sqlalchemy.exc import IntegrityError
 
 
