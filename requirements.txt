@@ -24,6 +24,6 @@ python-editor==1.0.3
 pytz==2018.7
 six==1.11.0
 SQLAlchemy==1.2.14
-ujson==1.35
+ujson==5.4.0
 urllib3==1.24.1
 Werkzeug==0.14.1
